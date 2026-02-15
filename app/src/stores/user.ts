@@ -16,8 +16,8 @@ interface UserState {
 }
 
 const defaultSettings: UserSettings = {
-  uiMode: "standard",
-  fontSize: "normal",
+  uiMode: "senior",
+  fontSize: "large",
   soundEnabled: true,
   vibrationEnabled: true,
   notificationEnabled: true,

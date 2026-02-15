@@ -30,8 +30,7 @@ export default function QuestionCard({ question, onAnswer, disabled }: QuestionC
       setIsCorrect(correct);
       setShowFeedback(true);
 
-      // 短いフィードバック後にコールバック
-      const delay = prefersReducedMotion ? 300 : 800;
+      const delay = prefersReducedMotion ? 400 : 1000;
       setTimeout(() => {
         onAnswer(option, correct);
         setSelected(null);
@@ -47,16 +46,16 @@ export default function QuestionCard({ question, onAnswer, disabled }: QuestionC
 
   return (
     <motion.div
-      className="flex flex-col gap-6"
+      className="flex flex-col gap-8"
       initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, x: 30 }}
       animate={{ opacity: 1, x: 0 }}
       exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, x: -30 }}
       transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
     >
-      {/* 問題文 */}
-      <div className="rounded-[var(--radius-lg)] bg-[var(--surface)] p-5 shadow-[var(--shadow-sm)]">
+      {/* 問題文 - 超大きく */}
+      <div className="rounded-[var(--radius-xl)] bg-[var(--surface)] p-6 shadow-[var(--shadow-md)]">
         <p
-          className="text-center font-heading text-lg font-bold text-[var(--foreground)]"
+          className="text-center font-heading text-2xl font-bold leading-relaxed text-[var(--foreground)]"
           style={
             question.metadata?.displayColor
               ? { color: question.metadata.displayColor as string }
@@ -67,7 +66,7 @@ export default function QuestionCard({ question, onAnswer, disabled }: QuestionC
         </p>
         {question.metadata?.displayColor ? (
           <p
-            className="mt-3 text-center font-heading text-3xl font-bold"
+            className="mt-4 text-center font-heading text-5xl font-bold"
             style={{ color: question.metadata.displayColor as string }}
           >
             {String(question.metadata.text ?? "")}
@@ -75,9 +74,9 @@ export default function QuestionCard({ question, onAnswer, disabled }: QuestionC
         ) : null}
       </div>
 
-      {/* 選択肢 */}
+      {/* 選択肢 - 縦並び、超大きなボタン */}
       {question.options && (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="flex flex-col gap-4">
           {question.options.map((option, idx) => {
             const isSelected = selected === option;
             const isAnswer = option === correctAnswer;
@@ -90,35 +89,35 @@ export default function QuestionCard({ question, onAnswer, disabled }: QuestionC
                 onClick={() => handleSelect(option)}
                 disabled={disabled || selected !== null}
                 className={cn(
-                  "relative min-h-[56px] rounded-[var(--radius-lg)] border-2 px-4 py-3",
-                  "font-heading text-base font-bold",
+                  "rounded-[var(--radius-xl)] border-3 px-6 py-5",
+                  "font-heading text-xl font-bold",
                   "transition-colors duration-150",
-                  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--primary)]",
+                  "min-h-[72px]",
                   showCorrect
-                    ? "border-[var(--success)] bg-[var(--success)]/10 text-[var(--success)]"
+                    ? "border-[var(--success)] bg-[var(--success)]/15 text-[var(--success)]"
                     : showWrong
-                      ? "border-[var(--secondary)] bg-[var(--secondary)]/10 text-[var(--secondary)]"
+                      ? "border-[var(--secondary)] bg-[var(--secondary)]/15 text-[var(--secondary)]"
                       : isSelected
                         ? "border-[var(--primary)] bg-[var(--primary)]/10 text-[var(--primary)]"
                         : "border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)] hover:border-[var(--primary-light)] hover:bg-[var(--primary)]/5",
                   (disabled || selected !== null) && !isSelected && !showCorrect
-                    ? "opacity-50"
+                    ? "opacity-40"
                     : ""
                 )}
                 whileTap={
                   !disabled && selected === null && !prefersReducedMotion
-                    ? { scale: 0.96 }
+                    ? { scale: 0.97 }
                     : undefined
                 }
                 animate={
                   showCorrect && !prefersReducedMotion
-                    ? { scale: [1, 1.04, 1] }
+                    ? { scale: [1, 1.03, 1] }
                     : showWrong && !prefersReducedMotion
                       ? { x: [0, -4, 4, -4, 0] }
                       : undefined
                 }
                 transition={{ duration: 0.3 }}
-                aria-label={`選択肢: ${option}`}
+                aria-label={`${option}`}
               >
                 {option}
               </motion.button>
@@ -127,69 +126,52 @@ export default function QuestionCard({ question, onAnswer, disabled }: QuestionC
         </div>
       )}
 
-      {/* テキスト入力（選択肢がない場合） */}
+      {/* テキスト入力なし - すべてボタン操作 */}
       {!question.options && (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            const input = e.currentTarget.elements.namedItem("answer") as HTMLInputElement;
-            if (input.value.trim()) {
-              const correct =
-                Array.isArray(question.correctAnswer)
-                  ? question.correctAnswer.includes(input.value.trim())
-                  : question.correctAnswer === input.value.trim();
-              onAnswer(input.value.trim(), correct);
-              input.value = "";
-            }
-          }}
-          className="flex gap-3"
-        >
-          <input
-            name="answer"
-            type="text"
-            autoComplete="off"
-            disabled={disabled}
-            className={cn(
-              "flex-1 rounded-[var(--radius-lg)] border-2 border-[var(--border)] bg-[var(--surface)] px-4 py-3",
-              "font-body text-base text-[var(--foreground)]",
-              "placeholder:text-[var(--foreground-muted)]",
-              "focus:border-[var(--primary)] focus:outline-none"
-            )}
-            placeholder="こたえを入力..."
-          />
-          <button
-            type="submit"
-            disabled={disabled}
-            className={cn(
-              "min-h-[48px] rounded-[var(--radius-lg)] bg-[var(--primary)] px-6 py-3",
-              "font-heading text-base font-bold text-white",
-              "transition-transform duration-150 active:scale-95",
-              "disabled:opacity-50"
-            )}
-          >
-            かくにん
-          </button>
-        </form>
+        <div className="flex flex-col gap-4">
+          {/* 選択肢がない場合は正解を含む4択を自動生成 */}
+          {(() => {
+            const correct = Array.isArray(question.correctAnswer)
+              ? question.correctAnswer[0] ?? ""
+              : question.correctAnswer;
+            const dummies = ["？", "わからない"];
+            const options = [correct, ...dummies].sort(() => Math.random() - 0.5);
+            return options.map((option, idx) => (
+              <motion.button
+                key={`fallback-${idx}`}
+                onClick={() => handleSelect(option)}
+                disabled={disabled || selected !== null}
+                className={cn(
+                  "rounded-[var(--radius-xl)] border-3 px-6 py-5",
+                  "font-heading text-xl font-bold",
+                  "min-h-[72px]",
+                  "border-[var(--border)] bg-[var(--surface)] text-[var(--foreground)]"
+                )}
+              >
+                {option}
+              </motion.button>
+            ));
+          })()}
+        </div>
       )}
 
-      {/* フィードバック */}
+      {/* フィードバック - 大きく表示 */}
       <AnimatePresence>
         {showFeedback && (
           <motion.div
             className={cn(
-              "flex items-center justify-center gap-2 rounded-[var(--radius-lg)] p-3",
+              "flex items-center justify-center gap-3 rounded-[var(--radius-xl)] p-5",
               isCorrect
-                ? "bg-[var(--success)]/10 text-[var(--success)]"
-                : "bg-[var(--secondary)]/10 text-[var(--secondary)]"
+                ? "bg-[var(--success)]/15 text-[var(--success)]"
+                : "bg-[var(--secondary)]/15 text-[var(--secondary)]"
             )}
             initial={prefersReducedMotion ? { opacity: 1 } : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: prefersReducedMotion ? 0 : 0.2 }}
           >
-            <span className="text-xl">{isCorrect ? "🎉" : "💪"}</span>
-            <span className="font-heading text-base font-bold">
-              {isCorrect ? "すごい！正解！" : "おしい！つぎはできるよ！"}
+            <span className="text-4xl">{isCorrect ? "🎉" : "💪"}</span>
+            <span className="font-heading text-xl font-bold">
+              {isCorrect ? "すごい！せいかい！" : "おしい！"}
             </span>
           </motion.div>
         )}

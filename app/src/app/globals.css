@@ -118,15 +118,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* UIモード別フォントサイズ */
-[data-mode="senior"] {
-  font-size: 20px;
+/* ベースフォントサイズ - シニア最優先 */
+html {
+  font-size: 22px;
   line-height: 1.8;
-}
-
-[data-mode="kids"] {
-  font-size: 18px;
-  line-height: 1.7;
 }
 
 /* Reduced motion */
