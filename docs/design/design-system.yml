@@ -1,0 +1,947 @@
+# ============================================================================
+# 脳活ファミリー デザインシステム
+# ============================================================================
+# 3世代つながる認知症予防アプリ「脳活ファミリー」
+#
+# Source: docs/requirements/design-requirements.md
+# Phase: 2 - 設計
+# ============================================================================
+
+version: "1.0.0"
+generated_at: "2026-02-15T12:00:00+09:00"
+source: "docs/requirements/design-requirements.md"
+
+# ----------------------------------------------------------------------------
+# 1. 美的方向性
+# ----------------------------------------------------------------------------
+aesthetic:
+  direction: warm-friendly
+  mood: bright-joyful-calm
+  differentiation: "医療っぽくない楽しい健康アプリ。3世代の笑顔をつなぐ。ゲーム感覚の楽しさと医学的信頼性を両立し、毎日開きたくなる温かい居場所を実現する"
+  core_metaphor: "おばあちゃんの家に遊びに来たときの安心感"
+  memorable: "家族みんなの笑顔が見えるアプリ"
+
+  tone_attributes:
+    - fun: "ゲーム的達成感、キャラクターによる励まし"
+    - warm: "手書き風要素、丸みのあるUI、暖色系"
+    - trustworthy: "一貫したデザインシステム、洗練されたレイアウト"
+    - calm: "十分な余白、穏やかな配色、静かなアニメーション"
+
+  tone_avoid:
+    - "ガチャガチャしたゲーム感"
+    - "冷たいフラットデザイン"
+    - "安っぽいクリップアート風"
+    - "派手すぎる配色・過剰な動き"
+
+  references:
+    - name: "Nintendo"
+      adopt: "親しみやすさ、世代を超えた楽しさ、直感的操作"
+      avoid: "ゲーム的な競争の激しさ"
+    - name: "LINE"
+      adopt: "温かいコミュニケーション、スタンプ的表現、家族感"
+      avoid: "ビジネス機能の複雑さ"
+    - name: "Apple Health"
+      adopt: "データの信頼感、洗練されたグラフ、クリーンなレイアウト"
+      avoid: "無機質さ、冷たい色調"
+    - name: "Duolingo"
+      adopt: "ゲーミフィケーション、キャラクター活用、達成感の演出"
+      avoid: "過度なプッシュ通知の圧"
+
+# ----------------------------------------------------------------------------
+# 2. カラーシステム
+# ----------------------------------------------------------------------------
+colors:
+  # --- ブランドカラー ---
+  primary: "#3D8B5F"        # 温かみのあるフォレストグリーン（生命力・健康・安心感）
+  secondary: "#E8845C"      # やさしいコーラル（活力・温かさ・励まし）
+  accent: "#F2C94C"         # 明るいイエロー（希望・ポジティブ・達成感）
+
+  # --- セマンティックカラー ---
+  semantic:
+    success:
+      light: "#5BA97B"      # 柔らかいグリーン（テスト正解、達成時）
+      dark: "#6DBF8B"
+    warning:
+      light: "#E8A85C"      # やさしいオレンジ（見逃さないで欲しい情報）
+      dark: "#F0B86C"
+    info:
+      light: "#5B9BD5"      # 穏やかなブルー（ヒント、補足情報）
+      dark: "#6CAAE0"
+    danger:
+      light: "#E8845C"      # コーラル（赤は使用禁止。エラー、要注意）
+      dark: "#F09070"
+
+  # --- 背景・サーフェスカラー ---
+  background:
+    base:
+      light: "#FBF8F3"      # クリーム
+      dark: "#1A2332"        # ダークネイビー（真っ黒禁止）
+    elevated:
+      light: "#FFFFFF"
+      dark: "#243447"
+  surface:
+    card:
+      light: "#FFFFFF"
+      dark: "#2A3F55"
+    hover:
+      light: "#F5F0E8"
+      dark: "#314A63"
+    active:
+      light: "#EDE7DB"
+      dark: "#3A5571"
+  overlay:
+    light: "rgba(26, 35, 50, 0.4)"
+    dark: "rgba(0, 0, 0, 0.6)"
+
+  # --- テキストカラー ---
+  text:
+    primary:
+      light: "#2C3E2D"      # ダークグリーン
+      dark: "#F0EDE6"
+    secondary:
+      light: "#6B7C6C"
+      dark: "#A8B8C8"
+    tertiary:
+      light: "#9BA89C"
+      dark: "#7A8A9A"
+    disabled:
+      light: "#C4CEC5"
+      dark: "#4A5A6A"
+    inverse:
+      light: "#FFFFFF"
+      dark: "#1A2332"
+
+  # --- 世代別アクセントカラー ---
+  generation:
+    senior:
+      color: "#4A9E8E"      # 落ち着いたティール
+      label: "シニア世代"
+      usage: "プロフィール枠、スコアハイライト"
+    parent:
+      color: "#5B8DC9"      # 穏やかなブルー
+      label: "親世代"
+      usage: "プロフィール枠、スコアハイライト"
+    kids:
+      color: "#E88E7A"      # 明るいコーラルピンク
+      label: "子供・孫世代"
+      usage: "プロフィール枠、スコアハイライト"
+
+  # --- コントラスト比要件 ---
+  contrast:
+    standard:
+      body_text: "4.5:1"
+      large_text: "3:1"     # 18px以上
+      ui_components: "3:1"
+    senior_mode:
+      body_text: "7:1"
+      large_text: "4.5:1"
+      ui_components: "4.5:1"
+
+  # --- ダークモード方針 ---
+  dark_mode:
+    implementation: "tailwind dark: prefix"
+    token_management: "CSS Custom Properties"
+    system_follow: true     # prefers-color-scheme 自動追従
+    manual_toggle: true     # 設定画面から手動切替
+    background_policy: "ダークネイビー系で温かみを維持。真っ黒(#000000)禁止"
+
+  # --- 禁止カラー ---
+  forbidden:
+    - color: "#FF0000系"
+      reason: "シニアに不安・恐怖を与える赤色。コーラル/オレンジ系で代替"
+    - color: "#000000"
+      reason: "背景に真っ黒は冷たく威圧的"
+    - color: "紫グラデーション on 白背景"
+      reason: "AI生成デザインの典型（AI slop）"
+    - color: "ネオンカラー"
+      reason: "目に優しくない"
+    - color: "虹色グラデーション"
+      reason: "品がない"
+
+# ----------------------------------------------------------------------------
+# 3. タイポグラフィ
+# ----------------------------------------------------------------------------
+typography:
+  heading:
+    japanese:
+      family: "Zen Maru Gothic"
+      fallback: '"Hiragino Maru Gothic ProN", sans-serif'
+      google_fonts: true
+      rationale: "丸みのある温かいゴシック体。シニアにも親しみやすい"
+    latin:
+      family: "Nunito"
+      fallback: '"Hiragino Maru Gothic ProN", sans-serif'
+      google_fonts: true
+      rationale: "丸みのある欧文フォントでZen Maru Gothicと調和"
+    weights: [600, 700, 800]
+
+  body:
+    japanese:
+      family: "Noto Sans JP"
+      fallback: '"Hiragino Kaku Gothic ProN", sans-serif'
+      google_fonts: true
+    latin:
+      family: "Nunito Sans"
+      fallback: '"Hiragino Kaku Gothic ProN", sans-serif'
+      google_fonts: true
+    weights: [400, 500]
+
+  score:
+    family: "Nunito"
+    fallback: "monospace"
+    feature: "font-feature-settings: 'tnum'"
+
+  # --- フォントウェイト ---
+  weights:
+    regular: 400        # 本文テキスト
+    medium: 500         # 強調テキスト、ラベル
+    semibold: 600       # 小見出し、ボタンテキスト
+    bold: 700           # 見出し、スコア表示
+    extrabold: 800      # ヒーローテキスト、達成表示
+
+  # --- タイプスケール（通常モード） ---
+  scale:
+    standard:
+      display:
+        size: "2.5rem"    # 40px
+        line_height: 1.2
+        weight: 800
+        usage: "ヒーロー、達成画面"
+      h1:
+        size: "2rem"      # 32px
+        line_height: 1.3
+        weight: 700
+        usage: "ページタイトル"
+      h2:
+        size: "1.5rem"    # 24px
+        line_height: 1.4
+        weight: 700
+        usage: "セクション見出し"
+      h3:
+        size: "1.25rem"   # 20px
+        line_height: 1.4
+        weight: 600
+        usage: "カード見出し"
+      h4:
+        size: "1.125rem"  # 18px
+        line_height: 1.5
+        weight: 600
+        usage: "サブ見出し"
+      body_large:
+        size: "1.125rem"  # 18px
+        line_height: 1.6
+        weight: 400
+        usage: "リード文"
+      body:
+        size: "1rem"      # 16px
+        line_height: 1.6
+        weight: 400
+        usage: "本文"
+      body_small:
+        size: "0.875rem"  # 14px
+        line_height: 1.5
+        weight: 400
+        usage: "補足テキスト"
+      caption:
+        size: "0.75rem"   # 12px
+        line_height: 1.5
+        weight: 500
+        usage: "タイムスタンプ、ラベル"
+
+    # --- シニアモード ---
+    senior:
+      display:
+        size: "3rem"      # 48px (+8px)
+        line_height: 1.3
+        weight: 800
+      h1:
+        size: "2.5rem"    # 40px (+8px)
+        line_height: 1.4
+        weight: 700
+      h2:
+        size: "2rem"      # 32px (+8px)
+        line_height: 1.5
+        weight: 700
+      h3:
+        size: "1.5rem"    # 24px (+4px)
+        line_height: 1.5
+        weight: 600
+      h4:
+        size: "1.375rem"  # 22px (+4px)
+        line_height: 1.6
+        weight: 600
+      body_large:
+        size: "1.375rem"  # 22px (+4px)
+        line_height: 1.8
+        weight: 400
+      body:
+        size: "1.25rem"   # 20px (最小20px)
+        line_height: 1.8
+        weight: 400
+      body_small:
+        size: "1.125rem"  # 18px (+4px)
+        line_height: 1.7
+        weight: 400
+      caption:
+        size: "1rem"      # 16px (+4px)
+        line_height: 1.6
+        weight: 500
+
+    # --- キッズモード ---
+    kids:
+      display:
+        size: "2.75rem"   # 44px (+4px)
+        line_height: 1.2
+        weight: 800
+      h1:
+        size: "2.25rem"   # 36px (+4px)
+        line_height: 1.3
+        weight: 700
+      h2:
+        size: "1.75rem"   # 28px (+4px)
+        line_height: 1.4
+        weight: 700
+      h3:
+        size: "1.375rem"  # 22px (+2px)
+        line_height: 1.5
+        weight: 600
+      h4:
+        size: "1.25rem"   # 20px (+2px)
+        line_height: 1.5
+        weight: 600
+      body_large:
+        size: "1.25rem"   # 20px (+2px)
+        line_height: 1.7
+        weight: 400
+      body:
+        size: "1.125rem"  # 18px (最小18px)
+        line_height: 1.7
+        weight: 400
+      body_small:
+        size: "1rem"      # 16px (+2px)
+        line_height: 1.6
+        weight: 400
+      caption:
+        size: "0.875rem"  # 14px (+2px)
+        line_height: 1.6
+        weight: 500
+
+  # --- 文字組みルール ---
+  typesetting:
+    heading_wrap: "text-wrap: balance"
+    score_numbers: 'font-feature-settings: "tnum"'   # tabular-nums
+    punctuation: "行頭禁則（句読点ぶら下がり禁止）"
+    mixed_script_spacing: "漢字とアルファベットの間に半角スペースを自動挿入"
+
+  # --- 禁止フォント ---
+  forbidden:
+    - font: "Inter"
+      reason: "AI生成コードの典型パターン（AI slop）"
+    - font: "Roboto"
+      reason: "AI生成コードの典型パターン（AI slop）"
+    - font: "Arial"
+      reason: "没個性、温かみがない"
+    - font: "Weight 100-200"
+      reason: "シニアが読めない極細ウェイト"
+
+# ----------------------------------------------------------------------------
+# 4. スペーシング
+# ----------------------------------------------------------------------------
+spacing:
+  unit: "8px"
+  grid: "8px grid system"
+  scale:
+    "0": "0px"
+    "1": "4px"            # アイコンとテキストの間
+    "2": "8px"            # インライン要素間
+    "3": "12px"           # 密接な要素間
+    "4": "16px"           # カード内パディング
+    "5": "20px"           # セクション内要素間
+    "6": "24px"           # カード間、セクション区切り
+    "8": "32px"           # セクション間
+    "10": "40px"          # 大きなセクション間
+    "12": "48px"          # ページセクション間
+    "16": "64px"          # ヒーローセクション周辺
+
+# ----------------------------------------------------------------------------
+# 5. ボーダー
+# ----------------------------------------------------------------------------
+borders:
+  radius:
+    none: "0px"
+    sm: "8px"             # 小さなバッジ、チップ
+    md: "12px"            # ボタン、入力フィールド
+    lg: "16px"            # カード
+    xl: "20px"            # 大きなカード、モーダル
+    "2xl": "24px"         # フローティングパネル
+    full: "9999px"        # アバター、丸ボタン
+  policy: "角丸は大きめに設定し、温かみと親しみやすさを表現する"
+
+# ----------------------------------------------------------------------------
+# 6. シャドウ
+# ----------------------------------------------------------------------------
+shadows:
+  sm: "0 1px 3px rgba(44, 62, 45, 0.06)"     # ボタン、チップ
+  md: "0 4px 8px rgba(44, 62, 45, 0.08)"     # カード（通常）
+  lg: "0 8px 16px rgba(44, 62, 45, 0.10)"    # カード（浮き上がり）
+  xl: "0 16px 32px rgba(44, 62, 45, 0.12)"   # モーダル、ドロップダウン
+  policy: "影の色はグリーン系 rgba(44, 62, 45, ...) を使用し温かみを維持。黒い影 rgba(0, 0, 0, ...) は避ける。過剰なドロップシャドウは禁止"
+
+# ----------------------------------------------------------------------------
+# 7. アイコン・イラスト・キャラクター
+# ----------------------------------------------------------------------------
+icons:
+  library: "lucide-react"
+  style: "Rounded（角丸）"
+  sizes:
+    standard: "24px"
+    senior: "32px"
+    kids: "28px"
+  stroke_width:
+    standard: "2px"
+    senior: "2.5px"
+  color: "currentColor（テーマ追従）"
+
+illustrations:
+  style: "手描き風の温かいイラスト。わずかな揺らぎを持つ線で温もりを表現"
+  color_limit: "ブランドカラーパレットから最大3色"
+  tone: "笑顔、やさしさ、つながりを感じる表現"
+  usage:
+    - "オンボーディング"
+    - "達成画面"
+    - "空状態"
+    - "エラー画面"
+    - "ローディング"
+
+mascot:
+  name: "のうかつ博士（のうかつはかせ）"
+  motif: "フクロウ（知恵・見守りの象徴）"
+  personality: "物知りでやさしい。褒め上手。失敗しても責めない"
+  color_scheme: "フォレストグリーン + クリーム + アクセントイエロー"
+  expressions:
+    - "喜び"
+    - "応援"
+    - "考え中"
+    - "驚き"
+    - "うなずき"
+    - "はなまる"
+  variants:
+    senior:
+      name: "のうかつ博士"
+      appearance: "メガネ、白衣風、落ち着いた佇まい"
+      speech_style: '丁寧語「すばらしいですね」'
+    parent:
+      name: "のうかつ先生"
+      appearance: "カジュアルな装い、ノートPC持ち"
+      speech_style: '親しみ語「いい調子!」'
+    kids:
+      name: "のうかつくん"
+      appearance: "キャップ、リュック、元気なポーズ"
+      speech_style: '元気語「すっごーい!」'
+  guidelines:
+    - "テスト開始前の声かけ（今日もがんばろう!）"
+    - "正解時の褒め（表情が喜びに変化）"
+    - "不正解時の励まし（おしい! もう一度やってみよう）表情は優しいまま"
+    - "ストリーク達成時の特別演出"
+    - "空状態のフォロー（まだテストしていないみたいだよ）"
+    - "キャラクターは常にポジティブ。否定的な表現は使用禁止"
+
+# ----------------------------------------------------------------------------
+# 8. アニメーション・モーション
+# ----------------------------------------------------------------------------
+animation:
+  library: "motion/react"
+  interaction_response: "200ms以下"
+  property_restriction: "Compositor props のみ（transform, opacity）"
+  layout_animation: "禁止（width, height, top, left, margin, padding）"
+  reduced_motion: "prefers-reduced-motion 完全対応（すべてのアニメーション無効化）"
+
+  easing:
+    ease_out:
+      label: "標準（入り）"
+      css: "cubic-bezier(0.0, 0.0, 0.2, 1.0)"
+    ease_in:
+      label: "標準（出）"
+      css: "cubic-bezier(0.4, 0.0, 1.0, 1.0)"
+    spring:
+      label: "強調"
+      config: 'type: "spring", stiffness: 300, damping: 25'
+    spring_bouncy:
+      label: "バウンス（達成時）"
+      config: 'type: "spring", stiffness: 400, damping: 15'
+
+  page_transitions:
+    forward:
+      animation: "スライドイン（右から） + フェード"
+      duration: "300ms"
+    backward:
+      animation: "スライドアウト（右へ） + フェード"
+      duration: "250ms"
+    modal_show:
+      animation: "スケールアップ (0.95 -> 1.0) + フェード"
+      duration: "200ms"
+    modal_hide:
+      animation: "スケールダウン (1.0 -> 0.95) + フェード"
+      duration: "150ms"
+
+  game_animations:
+    correct:
+      animation: "紙吹雪パーティクル + スケールバウンス"
+      duration: "600ms"
+      note: "色はブランドカラーから"
+    streak:
+      animation: "星が放射状に飛ぶ + ゴールドグロー"
+      duration: "800ms"
+      note: "3連続以上で発動"
+    incorrect:
+      animation: "やさしい横揺れ (shake)"
+      duration: "300ms"
+      note: "赤フラッシュ禁止"
+    timeout:
+      animation: "フェードアウト + キャラ応援"
+      duration: "400ms"
+      note: "焦りを与えない穏やかな演出"
+    score_display:
+      animation: "カウントアップアニメーション"
+      duration: "1200ms"
+      note: "数字がゼロから加算"
+    level_up:
+      animation: "スケールアップ + 光の演出"
+      duration: "1000ms"
+      note: "達成感を強調"
+
+  character_animations:
+    idle:
+      animation: "まばたき (scale-y: 1 -> 0.1 -> 1)"
+      duration: "150ms"
+      loop: "3-5秒間隔"
+    nod:
+      animation: "rotate (0 -> -5deg -> 5deg -> 0)"
+      duration: "400ms"
+      trigger: "褒め時に1回"
+    jump:
+      animation: "translate-y (0 -> -12px -> 0)"
+      duration: "350ms"
+      trigger: "達成時に2回"
+    wave:
+      animation: "rotate arm (0 -> 15deg -> -15deg -> 0)"
+      duration: "500ms"
+      trigger: "挨拶時"
+
+  # --- モード別アニメーション強度 ---
+  mode_intensity:
+    standard:
+      intensity: "100%"
+      confetti: true
+      character_motion: true
+      page_transition: "スライド+フェード"
+    senior:
+      intensity: "30%"
+      confetti: "控えめ（粒少）"
+      character_motion: "最小限（まばたきのみ）"
+      page_transition: "フェードのみ"
+    kids:
+      intensity: "150%"
+      confetti: "派手（粒多+大きい）"
+      character_motion: "大きな動き"
+      page_transition: "スライド+バウンス"
+    reduced_motion:
+      intensity: "0%"
+      confetti: false
+      character_motion: false
+      page_transition: "即時切替"
+
+  # --- 禁止アニメーション ---
+  forbidden:
+    - pattern: "フラッシュ/点滅 (3Hz以上)"
+      reason: "光過敏性発作のリスク"
+    - pattern: "急激な色変化"
+      reason: "不安を与える"
+    - pattern: "レイアウトプロパティのアニメーション"
+      reason: "パフォーマンス劣化"
+    - pattern: "5秒以上の連続アニメーション"
+      reason: "CPU/バッテリー消費"
+
+# ----------------------------------------------------------------------------
+# 9. コンポーネント
+# ----------------------------------------------------------------------------
+components:
+  library: "shadcn/ui"
+  styling: "tailwind"
+  animation: "motion/react"
+  icons: "lucide-react"
+  charts: "recharts"
+
+  utility:
+    cn: "clsx + tailwind-merge"
+    implementation: |
+      import { clsx, type ClassValue } from "clsx";
+      import { twMerge } from "tailwind-merge";
+      export function cn(...inputs: ClassValue[]) {
+        return twMerge(clsx(inputs));
+      }
+
+  css_custom_properties:
+    light:
+      "--color-primary": "61 139 95"          # #3D8B5F
+      "--color-secondary": "232 132 92"       # #E8845C
+      "--color-accent": "242 201 76"          # #F2C94C
+      "--color-background": "251 248 243"     # #FBF8F3
+      "--color-surface": "255 255 255"        # #FFFFFF
+      "--color-text-primary": "44 62 45"      # #2C3E2D
+      "--color-text-secondary": "107 124 108" # #6B7C6C
+      "--color-success": "91 169 123"         # #5BA97B
+      "--color-warning": "232 168 92"         # #E8A85C
+      "--color-info": "91 157 213"            # #5B9BD5
+      "--color-danger": "232 132 92"          # #E8845C
+      "--radius-md": "12px"
+      "--radius-lg": "16px"
+    dark:
+      "--color-background": "26 35 50"        # #1A2332
+      "--color-surface": "42 63 85"           # #2A3F55
+      "--color-text-primary": "240 237 230"   # #F0EDE6
+      "--color-text-secondary": "168 184 200" # #A8B8C8
+      "--color-success": "109 191 139"        # #6DBF8B
+      "--color-warning": "240 184 108"        # #F0B86C
+      "--color-info": "108 170 224"           # #6CAAE0
+      "--color-danger": "240 144 112"         # #F09070
+
+  button_variants:
+    primary:
+      usage: "メインアクション"
+      style: "緑背景 + 白文字"
+    secondary:
+      usage: "サブアクション"
+      style: "コーラル背景 + 白文字"
+    accent:
+      usage: "達成・特別アクション"
+      style: "イエロー背景 + ダークテキスト"
+    outline:
+      usage: "控えめなアクション"
+      style: "枠線 + テキスト色"
+    ghost:
+      usage: "ナビゲーション、テキストリンク"
+      style: "背景なし + テキスト色"
+    destructive:
+      usage: "削除（使用を最小限に）"
+      style: "コーラル系（赤禁止）"
+
+  customizations:
+    button:
+      border_radius: "12px"
+      min_height: "48-56px"
+      reason: "タッチしやすく"
+    card:
+      border_radius: "16px"
+      shadow: "グリーン系シャドウ"
+      reason: "温かみ"
+    input:
+      border_radius: "12px"
+      min_height: "48px"
+      border_width: "太め"
+      reason: "視認性"
+    dialog:
+      border_radius: "20px"
+      overlay: "薄め"
+      reason: "圧迫感軽減"
+    toast:
+      border_radius: "16px"
+      layout: "左にアイコン、右に閉じるボタン"
+      reason: "わかりやすく"
+    avatar:
+      border_radius: "full"
+      border: "世代カラー"
+      reason: "世代識別"
+    badge:
+      border_radius: "full"
+      padding: "増"
+      reason: "読みやすく"
+    tabs:
+      size: "大きめ"
+      active_indicator: "背景色変更（下線ではなく）"
+      reason: "シニアにわかりやすく"
+    progress:
+      border_radius: "full"
+      height: "12px"
+      animated: true
+      reason: "楽しい進捗表示"
+
+# ----------------------------------------------------------------------------
+# 10. グラフ・チャート
+# ----------------------------------------------------------------------------
+charts:
+  library: "recharts"
+  color_source: "ブランドカラーパレット"
+  bar_radius: "8px"
+  animation: "フェードイン + スケールアップ"
+  tooltip: "カスタムデザイン（カード風、角丸）"
+  responsive: "ResponsiveContainer で100%幅対応"
+
+  types:
+    line:
+      usage: "スコア推移（日別/週別/月別）"
+      line_width: "3px"
+      dot_size: "6px"
+      area_gradient: true
+    radar:
+      usage: "5領域バランス（記憶力/注意力/言語力/計算力/空間認識）"
+      fill_opacity: 0.2
+      line_width: "太い"
+    bar:
+      usage: "家族比較、日別比較"
+      radius: "8px"
+      color: "世代カラー使用"
+    donut:
+      usage: "達成率、カテゴリ比率"
+      arc_width: "30px"
+      center_label: true
+    calendar_heatmap:
+      usage: "継続状況（毎日のテスト実施）"
+      color: "緑のグラデーション（GitHub風）"
+
+  senior_adjustments:
+    line_width: "4-5px"       # 通常: 2-3px
+    dot_size: "8-10px"        # 通常: 4-6px
+    label_size: "16px"        # 通常: 12px
+    axis_label_size: "16px"   # 通常: 12px
+    legend_size: "18px"       # 通常: 14px
+    tooltip_trigger: "タップ（ホバーなし）"
+    max_data_points: 7        # 通常: 30（1週間分に制限）
+    grid_lines: "濃いめ"      # 通常: 薄い
+
+# ----------------------------------------------------------------------------
+# 11. レスポンシブ
+# ----------------------------------------------------------------------------
+responsive:
+  mobile_first: true
+  primary_target: "スマートフォン（シニアのメインデバイス）"
+  strategy: "プログレッシブエンハンスメント"
+  breakpoints:
+    sm: "640px"             # 大型スマートフォン
+    md: "768px"             # タブレット（縦）
+    lg: "1024px"            # タブレット（横）/ 小型PC
+    xl: "1280px"            # デスクトップ
+    "2xl": "1536px"         # 大型デスクトップ
+
+# ----------------------------------------------------------------------------
+# 12. UIモード（3世代対応）
+# ----------------------------------------------------------------------------
+ui_modes:
+  mode_switching:
+    auto_rules:
+      senior: "年齢 60歳以上"
+      standard: "年齢 13-59歳"
+      kids: "年齢 5-12歳"
+    manual_override: "設定画面から手動切替可能"
+
+  senior:
+    principle: "1画面1アクション。迷わせない"
+    min_font_size: "20px"
+    recommended_font_size: "22px"
+    line_height: 1.8
+    min_button_height: "56px"
+    touch_target: "56px以上"
+    max_actions_per_screen: 3
+    navigation: "大きなアイコン + テキストラベル（常に表示）"
+    input: "キーボード自動フォーカス、入力補助表示"
+    confirmation: "重要操作は2ステップ確認"
+    animation_intensity: "30%"
+    contrast: "7:1以上"
+    color_palette: "高コントラストパレット"
+    voice: "読み上げ対応 (aria-live)"
+    character: "のうかつ博士"
+    tap_spacing: "12px以上"
+
+  standard:
+    principle: "バランスの取れた情報密度とビジュアル"
+    min_font_size: "16px"
+    line_height: 1.6
+    min_button_height: "44px"
+    touch_target: "48px以上"
+    navigation: "アイコン + テキスト（モバイルはアイコンのみ可）"
+    animation_intensity: "100%"
+    contrast: "4.5:1以上"
+    character: "のうかつ先生"
+    tap_spacing: "8px以上"
+
+  kids:
+    principle: "カラフルで楽しく、遊び心満載"
+    min_font_size: "18px"
+    line_height: 1.7
+    min_button_height: "48px"
+    touch_target: "52px以上"
+    color_palette: "彩度高めのパレット"
+    illustrations: "多め。キャラクター「のうかつくん」が常駐"
+    navigation: "大きなアイコン + ひらがなラベル"
+    animation_intensity: "150%"
+    gamification: "バッジ、スター、レベルアップ演出を強化"
+    furigana: true
+    character: "のうかつくん"
+    tap_spacing: "8px以上"
+
+  common_rules:
+    - "モードが変わっても表示される情報の内容は同じ"
+    - "複雑な情報は「もっと見る」で段階的開示"
+    - "常に「戻る」動線を明確に"
+    - "重要操作は取り消し(Undo)を常に提供"
+    - "モード切替してもデータ・進捗は保持"
+
+# ----------------------------------------------------------------------------
+# 13. レイアウト
+# ----------------------------------------------------------------------------
+layout:
+  patterns:
+    single_column:
+      usage: "モバイルメイン"
+      structure: "1カラム、上下スクロール"
+    card_grid:
+      usage: "ゲーム選択、家族一覧"
+      structure: "2-3列グリッド（レスポンシブ）"
+    tab_content:
+      usage: "デイリースコア、履歴"
+      structure: "上部タブ + 下部コンテンツ"
+    split:
+      usage: "比較画面（タブレット以上）"
+      structure: "2カラム均等分割"
+    bottom_sheet:
+      usage: "詳細情報、設定"
+      structure: "オーバーレイ+ボトムアップ"
+
+  viewport_height: "h-dvh（Dynamic Viewport Height）。h-screen は使用禁止"
+
+  z_index:
+    base: 0               # 通常コンテンツ
+    elevated: 10           # フローティングボタン
+    sticky: 20             # ヘッダー、ナビゲーション
+    dropdown: 30           # ドロップダウンメニュー
+    modal_backdrop: 40     # モーダル背景
+    modal: 50              # モーダル本体
+    toast: 60              # トースト通知
+    tooltip: 70            # ツールチップ
+
+# ----------------------------------------------------------------------------
+# 14. アクセシビリティ
+# ----------------------------------------------------------------------------
+accessibility:
+  wcag_level: "AA"
+  senior_mode_level: "AAA に準じた高コントラスト"
+  screen_reader: "VoiceOver (iOS) / TalkBack (Android) 完全対応"
+  keyboard: "すべての機能がキーボードで操作可能"
+  focus_ring: "3px, primary color"
+
+  aria_guidelines:
+    button: "aria-label（アイコンのみの場合）"
+    image: 'alt 必須。装飾画像は alt="" + aria-hidden="true"'
+    form: "aria-label or <label> で必ずラベルを紐づけ"
+    live_update: 'aria-live="polite"（スコア更新、タイマー）'
+    modal: 'role="dialog", aria-modal="true"。フォーカストラップ必須'
+    tabs: 'role="tablist", role="tab", role="tabpanel"'
+    progress: 'role="progressbar", aria-valuenow'
+    chart: "aria-label + テキスト代替テーブル"
+
+  color_independence:
+    - "成功/エラーはアイコン + テキスト + 色の3要素で伝達"
+    - "グラフの凡例はパターン (破線, 点線, 実線) も併用"
+    - "フォームバリデーションはインラインメッセージで表示"
+
+  dynamic_content:
+    polite: "スコア更新、通知"
+    assertive: "エラーメッセージ、タイムアウト警告"
+    title_update: "ページ遷移時に document.title を更新"
+    focus_trap: "モーダルオープン時にフォーカストラップ"
+
+# ----------------------------------------------------------------------------
+# 15. 品質基準
+# ----------------------------------------------------------------------------
+quality:
+  lighthouse:
+    performance: 90
+    accessibility: 100
+    best_practices: 100
+    seo: 100
+    minimum:
+      performance: 85
+      accessibility: 95
+      best_practices: 95
+      seo: 95
+
+  core_web_vitals:
+    fcp: "< 1.8s"          # First Contentful Paint
+    lcp: "< 2.5s"          # Largest Contentful Paint
+    cls: "< 0.1"           # Cumulative Layout Shift
+    inp: "< 200ms"         # Interaction to Next Paint
+
+  performance_optimization:
+    font: "font-display: swap + サブセット化"
+    image: "WebP/AVIF、srcset による最適サイズ配信"
+    character_image: "SVG（アニメーション対応）またはLottie"
+    css: "Tailwind のパージ、未使用クラス除去"
+    js: "コード分割、遅延読み込み"
+    blur: "10px以下に制限（GPU負荷軽減）"
+    will_change: "アニメーション直前にのみ付与、常時設定禁止"
+    backdrop_filter: "使用最小限（シニアデバイスのGPU負荷考慮）"
+
+  wcag_level: "AA"
+  dark_mode: true
+
+# ----------------------------------------------------------------------------
+# 16. 禁止パターン（Anti-Patterns）
+# ----------------------------------------------------------------------------
+anti_patterns:
+  fonts:
+    - pattern: "Inter"
+      reason: "AI slop"
+    - pattern: "Roboto"
+      reason: "AI slop"
+    - pattern: "Arial"
+      reason: "没個性、温かみがない"
+    - pattern: "極細ウェイト (100-200)"
+      reason: "シニアが読めない"
+
+  colors:
+    - pattern: "紫グラデーション on 白背景"
+      reason: "AI slop"
+    - pattern: "純粋な赤 (#FF0000系)"
+      reason: "シニアに不安・恐怖を与える"
+    - pattern: "真っ黒 (#000000) 背景"
+      reason: "冷たく威圧的"
+    - pattern: "ネオンカラー"
+      reason: "目に優しくない"
+    - pattern: "虹色グラデーション"
+      reason: "品がない"
+
+  layout_effects:
+    - pattern: "過剰なドロップシャドウ"
+      reason: "AI slop"
+    - pattern: "グロー効果"
+      reason: "AI slop"
+    - pattern: "パララックススクロール"
+      reason: "シニアに酔いを与える"
+    - pattern: "無限スクロール"
+      reason: "シニアが現在位置を見失う"
+    - pattern: "自動カルーセル"
+      reason: "操作が追いつかない"
+    - pattern: "小さすぎるボタン (< 44px)"
+      reason: "タッチミスの原因"
+    - pattern: "テキストの画像化"
+      reason: "アクセシビリティ違反"
+
+  animations:
+    - pattern: "フラッシュ/点滅 (3Hz以上)"
+      reason: "光過敏性発作のリスク"
+    - pattern: "急激な色変化"
+      reason: "不安を与える"
+    - pattern: "レイアウトプロパティのアニメーション"
+      reason: "パフォーマンス劣化"
+    - pattern: "5秒以上の連続アニメーション"
+      reason: "CPU/バッテリー消費"
+
+  content:
+    - pattern: "否定的な表現（間違い、失敗、ダメ）"
+      reason: "ユーザーの意欲を削ぐ"
+    - pattern: "医療用語の直接使用"
+      reason: "不安を煽る"
+    - pattern: "複雑な数値の羅列"
+      reason: "シニアに理解しづらい"
+    - pattern: "英語のみの表記"
+      reason: "日本語ネイティブユーザー向け"

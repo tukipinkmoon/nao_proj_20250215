@@ -1,0 +1,27 @@
+project:
+  name: "noukatsu"
+  display_name: "のうかつ - 3世代つながる脳トレアプリ"
+  version: "0.1.0"
+  description: "認知症予防のための3世代ファミリー脳トレアプリ"
+  language: "ja"
+
+tech_stack:
+  framework: "nextjs"
+  language: "typescript"
+  styling: "tailwindcss"
+  state_management: "zustand"
+  animation: "motion/react"
+  testing: "vitest"
+  package_manager: "npm"
+
+domain:
+  dev_subdomain: "noukatsu-dev.aidreams-factory.com"
+  prod_subdomain: "noukatsu.aidreams-factory.com"
+
+app:
+  port: 3000
+  src_dir: "app/src"
+  build_dir: "app/.next"
+
+coordinator_agent:
+  max_parallel_tasks: 3

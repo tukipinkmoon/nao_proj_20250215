@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Noukatsu Brain App - Design System Tokens
+   Source: docs/design/design-system.yml
+   ============================================================ */
+
+@theme {
+  /* フォント */
+  --font-heading: "Zen Maru Gothic", "Nunito", system-ui, sans-serif;
+  --font-body: "Noto Sans JP", "Nunito Sans", system-ui, sans-serif;
+  --font-ui: "Noto Sans JP", "Nunito Sans", system-ui, sans-serif;
+
+  /* 角丸 */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+}
+
+/* ============================================================
+   Light Theme (default)
+   ============================================================ */
+
+:root {
+  /* Brand Colors */
+  --primary: #3D8B5F;
+  --primary-light: #5BA97D;
+  --primary-dark: #2D6B4A;
+  --secondary: #E8845C;
+  --secondary-light: #F0A080;
+  --secondary-dark: #D06A42;
+  --accent: #F2C94C;
+  --accent-light: #F5D76E;
+  --accent-dark: #D4A83A;
+
+  /* Semantic */
+  --success: #5BA97D;
+  --warning: #E8845C;  /* オレンジ系（赤色禁止） */
+  --error: #D06A42;    /* コーラル系（赤色禁止） */
+  --info: #5B9BD5;
+
+  /* Background */
+  --background: #FBF8F3;
+  --surface: #FFFFFF;
+  --surface-secondary: #F5F1EB;
+
+  /* Text */
+  --foreground: #2C3E2D;
+  --foreground-secondary: #6B7B6C;
+  --foreground-muted: #9BA89C;
+
+  /* Border */
+  --border: #E0DDD6;
+  --border-light: #EDE9E3;
+
+  /* 世代アクセント */
+  --generation-senior: #4AA3A2;
+  --generation-adult: #5B9BD5;
+  --generation-child: #E88CA5;
+
+  /* Shadow */
+  --shadow-sm: 0 1px 3px rgba(44, 62, 45, 0.06);
+  --shadow-md: 0 4px 8px rgba(44, 62, 45, 0.08);
+  --shadow-lg: 0 8px 24px rgba(44, 62, 45, 0.12);
+}
+
+/* ============================================================
+   Dark Theme
+   ============================================================ */
+
+.dark {
+  --primary: #5BA97D;
+  --primary-light: #7BC09A;
+  --primary-dark: #3D8B5F;
+  --secondary: #F0A080;
+  --secondary-light: #F5B8A0;
+  --secondary-dark: #E8845C;
+  --accent: #F5D76E;
+  --accent-light: #F8E490;
+  --accent-dark: #F2C94C;
+
+  --success: #7BC09A;
+  --warning: #F0A080;
+  --error: #F0A080;
+  --info: #7BB5E0;
+
+  --background: #1A2332;
+  --surface: #243040;
+  --surface-secondary: #2D3B4E;
+
+  --foreground: #E8E4DE;
+  --foreground-secondary: #A0AAB4;
+  --foreground-muted: #6B7580;
+
+  --border: #3A4858;
+  --border-light: #2D3B4E;
+
+  --generation-senior: #6BC4C3;
+  --generation-adult: #7BB5E0;
+  --generation-child: #F0A0B5;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================================
+   Base Styles
+   ============================================================ */
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* UIモード別フォントサイズ */
+[data-mode="senior"] {
+  font-size: 20px;
+  line-height: 1.8;
+}
+
+[data-mode="kids"] {
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* スクロールバー */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: var(--radius-full);
+}
